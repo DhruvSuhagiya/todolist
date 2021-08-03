@@ -5,6 +5,6 @@ import dataReducer from './reducer';
 const rootReducer = combineReducers({
     dataReducer
 })
-const store = createStore(rootReducer, {} ,composeWithDevTools(applyMiddleware(thunk)));
+const store = createStore(rootReducer ,composeWithDevTools(applyMiddleware(thunk)));
 
 export default store;

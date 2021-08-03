@@ -4,6 +4,7 @@ import Output from './components/output/Output';
 import './App.css';
 
 const App = () => {
+
   return (
     <div className="App">
       <h1>ToDo List</h1>

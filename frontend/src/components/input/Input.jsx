@@ -1,40 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import {storeData} from '../../redux/action';
-import axios from 'axios';
+import React, { useState } from 'react'
+import {useDispatch} from 'react-redux'
+import {fetchData, storeData} from '../../redux/action';
+import Button from '@material-ui/core/Button';
+import './Input.css'
 const Input = () => {
 
     const [item, setItem] = useState({
         id : 0,
         title : ''
     })
-    const selector = useSelector(state=>state.dataReducer)
     const dispatch = useDispatch();
-
-    useEffect(() => async () => {
-        const code = await axios.get("http://localhost:8080/app/getdata");
-        await localStorage.setItem("data", JSON.stringify(code.data));
-    },[selector]);
     const [data, setData] = useState([]);
 
-    const sendRequest = async (item) => {
-        const code = await axios.post("http://localhost:8080/app/additem",item);
-        if(code.status === 200){
-            console.log("data Added");  
-        }
-    }
     const formHandler = (e) => {
         e.preventDefault();
-
         setData([...data,item])
-
-        dispatch(storeData(item))
-        sendRequest(item);
-        
+        dispatch(storeData(item)) 
         setItem({
             id : Number(item.id) +1,
             title : ''
         })
+
+        setTimeout(() => {
+            dispatch(fetchData())
+        }, 500);
     }
     const itemHandler = (e)=>{
         setItem({
@@ -44,8 +33,8 @@ const Input = () => {
     }
     return (
         <form onSubmit={formHandler}>
-            <input type="text" placeholder="Item Name"  name="title" onChange={itemHandler} value={item.title}/>
-            <button>ADD</button>
+            <input className="input" type="text" placeholder="Item Name" name="title" onChange={itemHandler} value={item.title}/>
+            <Button variant="contained" color="primary">ADD</Button>
         </form>
     )
 }

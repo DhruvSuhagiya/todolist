@@ -1,34 +1,31 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import React, { useEffect } from 'react'
 import './Output.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteData, fetchData } from '../../redux/action';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const Output = () => {
     
-    const [data , setData] = useState();
+    const {data} = useSelector(state => state.dataReducer);
+    
+    const dispatch = useDispatch();
     useEffect(()=>{
-        const value = localStorage.getItem("data");
-        setData(JSON.parse(value));
-    })
-
-    const updateLocalStorage = (id)=>{
-        const UDdata = data.filter(value => value.id === Number(id));
-        setData(UDdata);
-        localStorage.setItem("data", UDdata)
-    }
-    const deleteHandler = async (e)=>{
-        const result = await axios.get(`http://localhost:8080/app/delete${e.target.id}`)
-        if(result.status === 200){
-            updateLocalStorage(e.target.id);
-        }
-        
+        dispatch(fetchData());
+    },[dispatch])
+    
+    const deleteHandler = (e) =>{
+        dispatch(deleteData(e.target.id));
+        setTimeout(()=>{ 
+            dispatch(fetchData());
+        },500)
     }
     return (
         <>
-            <ul>
+            <ul className="lists">
             {data && data.map((value, index) => (
                 <div key={index} className="list">
                     <li>{value.item}</li>
-                    <button onClick={deleteHandler} id={value.id}>delete</button>
+                    <DeleteForeverIcon onClick={deleteHandler} id={value.id} className="deletebtn"/>
                 </div>
             ))}
             </ul>
