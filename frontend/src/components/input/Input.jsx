@@ -10,11 +10,9 @@ const Input = () => {
         title : ''
     })
     const dispatch = useDispatch();
-    const [data, setData] = useState([]);
 
     const formHandler = (e) => {
         e.preventDefault();
-        setData([...data,item])
         dispatch(storeData(item)) 
         setItem({
             id : Number(item.id) +1,
